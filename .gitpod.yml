@@ -1,0 +1,20 @@
+# List the start up tasks. Learn more https://www.gitpod.io/docs/config-start-tasks/
+tasks:
+  - name: Node
+    init: yarn install
+    # Maak regel hieronder actief om de server automatisch te laten starten:
+    # command: node server-app.js 3000
+
+  - name: SQLite
+    init: printf '.headers on\n.mode column\n' >> .sqliterc
+    command: | # bouw db opnieuw op en open een terminalvenster met 
+              sqlite3 database.db < scripts/db-deletion.sql &&
+              sqlite3 database.db < scripts/db-creation.sql &&
+              sqlite3 database.db
+    openMode: tab-after
+
+# List the ports to expose. Learn more https://www.gitpod.io/docs/config-ports/
+ports:
+  - port: 3000
+    onOpen: open-browser
+    visibility: public
