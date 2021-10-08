@@ -1,12 +1,13 @@
 const express = require('express')
 const sqlite3 = require('sqlite3').verbose()
+const path = require('path');
 const app = express()
 const port = 3000
 
 var db = new sqlite3.Database('./database.db', sqlite3.OPEN_READWRITE, databaseConnectCompletion);
 
 
-app.use(express.static('/website-bestanden'))
+app.use(express.static(path.join(__dirname, '/website-bestanden')));
 
 app.get('/', geefWidget)
 app.get('/api/echo', echoRequest)
@@ -53,13 +54,8 @@ function echoRequest(request, response) {
 // maakt een nieuwe run aan in de database
 // en geeft een oké terug
 function creeerNieuweRun(request, response) {
-  db.all("dit is de query", [], function (error, rows) {
-    if (error != undefined) {
-      throw error
-    }
-
-    response.send(JSON.stringify(rows));
-  })
+  console.log(opvragenDatabase("SELECT * FROM products"))
+  response.status(200).send()
 }
 
 // geeft laatste sensordata van de run terug 
@@ -82,16 +78,16 @@ function setInstellingen(request, response) {
 
 }
 
-function opvragenDatabase(sql, parameters = []) {
-  var result = null;
-  db.all(sql, parameters, function (error, rows) {
-    if (error == null) {
-      result = rows;
-    }
-    else {
-      console.error(`Fout bij uitvoeren van ${sql}:\n` + error)
-    }
-  })
+async function opvragenDatabase(sql, parameters = []) {
+  var result =  await db.all(sql, parameters, function (error, rows) {
+                             if (error == null) {
+                               return rows;
+                             }
+                             else {
+                               console.error(`Fout bij uitvoeren van ${sql}:\n` + error)
+                             }
+                           })
+  
 
   return result;
 }

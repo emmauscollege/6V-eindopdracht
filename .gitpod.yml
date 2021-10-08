@@ -6,8 +6,8 @@ tasks:
     # command: node server-app.js 3000
 
   - name: SQLite
-    init: printf '.headers on\n.mode column\n' >> ~/.sqliterc
-    command: | # bouw db opnieuw op en open een terminalvenster met 
+    init: printf '.headers on \n .mode column \n .nullvalue NULL' >> ~/.sqliterc #handige instellingen voor fijne weergave
+    command: | # bouw db opnieuw op en open een terminalvenster
               sqlite3 database.db < scripts/db-deletion.sql &&
               sqlite3 database.db < scripts/db-creation.sql &&
               sqlite3 database.db
