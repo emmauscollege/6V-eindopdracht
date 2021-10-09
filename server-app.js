@@ -5,11 +5,12 @@ const path = require('path');
 const app = express()
 const port = 3000
 
+// een paar instellingen voor de server
 var db = new sqlite3.Database('./database.db', sqlite3.OPEN_READWRITE, databaseConnectCompletion);
-
-
 app.use(express.static(path.join(__dirname, '/widget')));
 
+
+// definieer startpunten voor de server
 app.get('/', geefWidget)
 app.get('/api/echo', echoRequest)
 app.get('/api/set/nieuwerun', creeerNieuweRun);
@@ -18,7 +19,7 @@ app.get('/api/get/sensordata', getSensorData);
 app.get('/api/set/instellingen', setInstellingen);
 app.get('/api/get/instellingen', getInstellingen);
 
-
+// start de server!
 app.listen(port, serverIsGestart)
 
 
