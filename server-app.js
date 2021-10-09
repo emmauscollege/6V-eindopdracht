@@ -93,6 +93,12 @@ function setInstellingen(request, response) {
 }
 
 
+// ----------------------------------------------------------------------------
+// ---------- voorgegeven functies voor de handigheid -------------------------
+// ----------------------------------------------------------------------------
+
+// verwerkt output van een SELECT-query en
+// stuurt dat terug met de meegegeven response-parameter
 function stuurZoekResultaat(response) {
   function returnFunction (error, data) {
     if (error == null) {    // alles ging goed
@@ -108,7 +114,8 @@ function stuurZoekResultaat(response) {
   return returnFunction;
 }
 
-
+// verwerkt uitkomst van een UPDATE / INSERT of DELETE-query en
+// stuurt dat terug met de meegegeven response-parameter
 function stuurAanpassingsResultaat(response) {
   function returnFunction (error) {
     if (error == null) {    // alles ging goed
@@ -123,6 +130,7 @@ function stuurAanpassingsResultaat(response) {
   return returnFunction;
 }
 
+// geeft de hoogste id uit de runs tabel
 function geefHoogsteRunID() {
   db.get("SELECT max(id) as id FROM runs", [], (error, data) => {
     if (error) {
