@@ -6,7 +6,7 @@ const app = express()
 const port = 3000
 
 // een paar instellingen voor de server
-var db = new sqlite3.Database('./database.db', sqlite3.OPEN_READWRITE, databaseConnectCompletion);
+var db = new sqlite3.Database('./database/database.db', sqlite3.OPEN_READWRITE, databaseConnectCompletion);
 app.use(express.static(path.join(__dirname, '/widget')));
 
 
@@ -52,7 +52,7 @@ function geefWidget(request, response) {
 // stuurt de variabelen uit het request
 // terug naar de browser en in de console
 function echoRequest(request, response) {
-  response.send(request.query)
+  response.status(200).send(request.query)
 }
 
 // maakt een nieuwe run aan in de database
@@ -64,8 +64,8 @@ function creeerNieuweRun(request, response) {
 
 // geeft laatste sensordata van de run terug 
 function getSensorData(request, response) {
-  var runID = geefHoogsteRunID();
-  db.all("SELECT SUM(aantalKnikkers) as knikkers FROM sensorData WHERE run = ?", [runID], stuurZoekResultaat(response))
+  var huidigeRunID = geefHoogsteRunID();
+  db.all("SELECT SUM(aantalKnikkers) as knikkers FROM sensorData WHERE run = ?", [huidigeRunID], stuurZoekResultaat(response))
 }
 
 // slaat doorgegeven data op in de database
