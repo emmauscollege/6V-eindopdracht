@@ -3,18 +3,17 @@ class Teller {
   y;
   aantal;
 
-  constructor(_x, y) {
+  constructor(_x, _y) {
     this.x = _x;
     this.y = _y;
     this.aantal = 0;
   }
 
   show() {
-    noStroke();         // geen rand
-    fill(0, 0, 0);      // zwart
-
+    noStroke();               // geen rand
+    fill(255, 255, 255);      // wit
+    textSize(14);
     // print aantal knikkers bovenin
-    text(aantal, this.x, this.y);
+    text(this.aantal, this.x, this.y);
   }
-  
 }

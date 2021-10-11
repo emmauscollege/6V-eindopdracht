@@ -1,7 +1,7 @@
 {
   "dependencies": {
-    "express": "^4.17.1",
-    "sqlite3": "^5.0.2"
+    "better-sqlite3": "^7.4.3",
+    "express": "^4.17.1"
   },
   "name": "6v-eindopdracht",
   "version": "1.0.0",

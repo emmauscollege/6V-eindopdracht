@@ -1,46 +1,33 @@
 const express = require('express');
-const { maxHeaderSize } = require('http');
-const sqlite3 = require('sqlite3').verbose()
+const http = require('http');
+const Database = require('better-sqlite3');
 const path = require('path');
-const app = express()
-const port = 3000
+const app = express();
+const port = 3000;
 
 // een paar instellingen voor de server
-var db = new sqlite3.Database('./database/database.db', sqlite3.OPEN_READWRITE, databaseConnectCompletion);
+var db = new Database('./database/database.db', { verbose: console.log });
 app.use(express.static(path.join(__dirname, '/widget')));
 
 
 // definieer startpunten voor de server
-app.get('/', geefWidget)
-app.get('/api/echo', echoRequest)
+app.get('/', geefWidget);
+app.get('/api/echo', echoRequest);
 app.get('/api/set/nieuwerun', creeerNieuweRun);
 app.get('/api/set/sensordata', setSensorData);
 app.get('/api/get/sensordata', getSensorData);
 app.get('/api/set/instellingen', setInstellingen);
 app.get('/api/get/instellingen', getInstellingen);
 
-// start de server!
-app.listen(port, serverIsGestart)
+// start de server
+app.listen(port, serverIsGestart);
 
-
-// wordt uitgevoerd nadat database een connectie
-// probeert te maken
-function databaseConnectCompletion(error) {
-  if (error == null) {
-    console.log('Verbonden met de database.');
-  }
-  else {
-    console.error('Fout bij verbinden met database.')
-    console.error(error.message);
-  }
-
-}
-
+// ---------------------------------------------------------------------------
 
 // wordt uitgevoerd als de server is opgestart
 function serverIsGestart() {
-  var url = process.env.GITPOD_WORKSPACE_URL
-  console.log(`De server is opgestart en is bereikbaar op ${url}:${port}`)
+  var url = process.env.GITPOD_WORKSPACE_URL;
+  console.log(`De server is opgestart en is bereikbaar op ${url}:${port}`);
 }
 
 
@@ -49,40 +36,52 @@ function geefWidget(request, response) {
   response.redirect('index.html');
 }
 
+
 // stuurt de variabelen uit het request
 // terug naar de browser en in de console
 function echoRequest(request, response) {
-  response.status(200).send(request.query)
+  response.status(200).send(request.query);
 }
+
 
 // maakt een nieuwe run aan in de database
 // en geeft een oké terug
 function creeerNieuweRun(request, response) {
-  // insert een nieuwe regel in de tabel 'runs' waarin we alleen de huidige tijd (timestamp) meegeven
-  db.run("INSERT INTO runs (stamp) VALUES (CURRENT_TIMESTAMP)", stuurAanpassingsResultaat(response))
+  // insert een nieuwe regel in de tabel 'runs'
+  // waarin we alleen de huidige tijd (timestamp) meegeven
+  db.prepare("INSERT INTO runs (stamp) VALUES (CURRENT_TIMESTAMP)").run();
+  response.status(200).send();
 }
+
 
 // geeft laatste sensordata van de run terug 
 function getSensorData(request, response) {
   var huidigeRunID = geefHoogsteRunID();
-  db.all("SELECT SUM(aantalKnikkers) as knikkers FROM sensorData WHERE run = ?", [huidigeRunID], stuurZoekResultaat(response))
+  var stmt = db.prepare('SELECT SUM(aantalKnikkers) as knikkers FROM sensorData WHERE run = ?;');
+  var data = stmt.all(huidigeRunID);
+  response.status(200).send(data);
 }
+
 
 // slaat doorgegeven data op in de database
 function setSensorData(request, response) {
-  var aantalNieuweKnikkers = request.query.knikkers
-  var huidigeRunID = geefHoogsteRunID()
+  var aantalNieuweKnikkers = request.query.knikkers;
+  var huidigeRunID = geefHoogsteRunID();
   var SQL = `INSERT INTO sensorData (run, stamp, aantalKnikkers)
-              VALUES (?, CURRENT_TIMESTAMP, ?)`
-  db.run(SQL, [aantalNieuweKnikkers, huidigeRunID], stuurAanpassingsResultaat(response))
+             VALUES (?, CURRENT_TIMESTAMP, ?)`
+  db.prepare(SQL).run(aantalNieuweKnikkers, huidigeRunID);
+  response.status(200).send();
 }
+
 
 // geeft de laatst ingevoerde instellingen terug
 function getInstellingen(request, response) {
   // haal de laatst opgeslagen instellingen op
   // db.get geeft alleen het eerste resultaat
-  db.get("SELECT * FROM instellingen ORDER BY id DESC", [], stuurZoekResultaat(response))
+  var data = db.prepare("SELECT * FROM instellingen ORDER BY id DESC").get();
+  response.status(200).send(data);
 }
+
 
 // slaat doorgegeven instellingen op in de database
 function setInstellingen(request, response) {
@@ -90,54 +89,13 @@ function setInstellingen(request, response) {
   var wachttijd = request.query.wachttijd;
   var SQL = `INSERT INTO instellingen (run, stamp, wachttijd)
              VALUES (? , CURRENT_TIMESTAMP, ?)`;
-  db.run(SQL, [huidigeRunID, wachttijd], stuurAanpassingsResultaat(response));
+  db.prepare(SQL, [huidigeRunID, wachttijd], stuurAanpassingsResultaat(response));
 }
 
-
-
-// ----------------------------------------------------------------------------
-// ---------- voorgegeven functies voor de handigheid -------------------------
-// ----------------------------------------------------------------------------
-
-// verwerkt output van een SELECT-query en
-// stuurt dat terug met de meegegeven response-parameter
-function stuurZoekResultaat(response) {
-  function returnFunction (error, data) {
-    if (error == null) {    // alles ging goed
-      console.log(JSON.stringify(data, null, 2))
-      response.status(200).send(data)
-    }
-    else {                  // er trad een fout op bij de database
-      console.error(`Fout bij opvragen gegevens:` + error)
-      response.status(400).send(error)
-    }
-  }
-
-  return returnFunction;
-}
-
-// verwerkt uitkomst van een UPDATE / INSERT of DELETE-query en
-// stuurt dat terug met de meegegeven response-parameter
-function stuurAanpassingsResultaat(response) {
-  function returnFunction (error) {
-    if (error == null) {    // alles ging goed
-      response.status(200).send()
-    }
-    else {                  // er trad een fout op bij de database
-      console.error(`Fout bij aanpassen database:` + error)
-      response.status(400).send(error)
-    }
-  }
-
-  return returnFunction;
-}
 
 // geeft de hoogste id uit de runs tabel
+// dit is een hulpfunctie voor gebruik in andere queries
 function geefHoogsteRunID() {
-  db.get("SELECT max(id) as id FROM runs", [], (error, data) => {
-    if (error) {
-      throw error
-    }
-    return data.id;
-  })
+  var data = db.prepare("SELECT max(id) as id FROM runs").get();
+  return data.id;
 }

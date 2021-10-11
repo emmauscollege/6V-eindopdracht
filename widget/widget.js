@@ -1,19 +1,22 @@
 class Widget {
   // private attributen
-  knikkerTellerBoven = 0;
-  UPDATE_INTERVAL = 5000;
+  aantalKnikkersBoven;    // aantal knikkers dat bovenin is binnengekomen
+  wachttijd;              // wachttijd voor het poortje in seconden
+  UPDATE_INTERVAL;        // tijd in milliseconden tussen het door widget opvragen van gegevens
   button;
-
-  serverCommunicator = new ServerCommunicator();
+  teller;
+  wachtijdInput;
 
   constructor() {
-    this.knikkerTellerBoven = 0;
+    // standaardwaarden ingeven
+    this.aantalKnikkersBoven = 0;
+    this.wachttijd = 15;
     this.UPDATE_INTERVAL = 5000;
 
-    // maak een button en stel deze in
-    
-    setInterval(this.vraagSensorData.bind(this), this.UPDATE_INTERVAL);
+    // om de ... milliseconden wordt 'vraagSensorData' uitgevoerd
+    setInterval(this.vraagSensorData, this.UPDATE_INTERVAL);
   }
+
 
   /**
    * setup
@@ -24,9 +27,16 @@ class Widget {
     // Maak het canvas van je widget
     createCanvas(300, 600);
 
+    this.teller = new Teller(150, 50);
+
+    // maak een button en stel deze in
     this.button = createButton('Verstuur');
-    this.button.position(200, 575);
-    this.button.mouseClicked(this.stuurInstellingen);
+    this.button.position(250, 575);
+    this.button.mouseClicked(this.stuurNieuweInstellingen);
+
+    this.wachtijdInput = createInput();
+    this.wachtijdInput.position(225, 70);
+    this.wachtijdInput.size(50);
   }
 
 
@@ -44,23 +54,63 @@ class Widget {
 
     // twee dikke strepen als 'opvangbak'
     stroke(0, 0, 0);
-    strokeWeight(15);
-    line(50, 20, 140, 80);
-    line(250, 20, 160, 80);
+    strokeWeight(10);
+    line(50, 20, 135, 60);
+    line(250, 20, 165, 60);
+
+    this.teller.aantal = this.aantalKnikkersBoven;
+    this.teller.show();
   }
 
+
+  // stuurt een verzoek aan de server dat alle
+  // sensordata opvraat
   vraagSensorData() {
-    this.serverCommunicator.getSensorData(this.verwerkNieuweSensorData.bind(this));
+    var request = new XMLHttpRequest();
+
+    // maak een http-verzoek
+    request.open('GET', '/api/get/sensordata', true)
+
+    // wat uitvoeren als het antwoord teruggegeven wordt?
+    request.onload = function () {
+      var data = request.response;
+
+      if (request.status == 200) {
+        console.log("Dit geeft de server terug:" + data);
+        this.knikkerTellerBoven = data.knikkers;
+      }
+      else {
+        console.log("server reageert niet zoals gehoopt");
+        console.log(request.response);
+      }
+    }
+
+    // verstuur het request
+    request.send()
   }
 
-  verwerkNieuweSensorData(data) {
-    this.knikkerTellerBoven = data.knikkers;
+
+  // stuurt een http-verzoek aan de server met de
+  // nieuwe instellingen
+  stuurNieuweInstellingen() {
+    var request = new XMLHttpRequest();
+
+    // maak een http-verzoek
+    request.open('GET', '/api/set/instellingen?wachttijd=' + this.wachtijd, true)
+
+    // wat uitvoeren als het antwoord teruggegeven wordt?
+    request.onload = function () {
+      if (request.status == 200) {
+        // geeft positieve feedback in widget ofzo
+        console.log("Server accepteerde instellingen.")
+      }
+      else {
+        console.log("server reageert niet zoals gehoopt.");
+        console.log(request.response);
+      }
+    }
+
+    // verstuur het request
+    request.send()
   }
-
-  stuurInstellingen() {
-
-  }
-
-
-
 }
