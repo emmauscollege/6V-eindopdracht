@@ -51,13 +51,12 @@ function draw() {
   line(50, 20, 135, 60);
   line(250, 20, 165, 60);
 
-  teller.aantal = aantalKnikkersBoven;
   teller.show();
 }
 
 
 // stuurt een verzoek aan de server dat alle
-// sensordata opvraat
+// sensordata opvraagt
 function vraagSensorData() {
   var request = new XMLHttpRequest();
 
@@ -66,11 +65,11 @@ function vraagSensorData() {
 
   // wat uitvoeren als het antwoord teruggegeven wordt?
   request.onload = function () {
-    var data = request.response;
+    var data = JSON.parse(request.response);
 
     if (request.status == 200) {
       console.log("Dit geeft de server terug:" + data);
-      knikkerTellerBoven = data.knikkers;
+      teller.aantal = data.aantalKnikkers;
     }
     else {
       console.log("server reageert niet zoals gehoopt");

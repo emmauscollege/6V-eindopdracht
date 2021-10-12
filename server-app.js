@@ -57,8 +57,8 @@ function creeerNieuweRun(request, response) {
 // geeft laatste sensordata van de run terug 
 function getSensorData(request, response) {
   var huidigeRunID = geefHoogsteRunID();
-  var stmt = db.prepare('SELECT SUM(aantalKnikkers) as knikkers FROM sensorData WHERE run = ?');
-  var data = stmt.all(huidigeRunID);
+  var stmt = db.prepare('SELECT aantalKnikkers FROM sensorData WHERE run = ? ORDER BY stamp DESC');
+  var data = stmt.get(huidigeRunID);
   response.status(200).send(data);
 }
 
@@ -69,7 +69,7 @@ function setSensorData(request, response) {
   var huidigeRunID = geefHoogsteRunID();
   var SQL = `INSERT INTO sensorData (run, stamp, aantalKnikkers)
              VALUES (?, CURRENT_TIMESTAMP, ?)`
-  db.prepare(SQL).run(aantalNieuweKnikkers, huidigeRunID);
+  db.prepare(SQL).run(huidigeRunID, aantalNieuweKnikkers);
   response.status(200).send();
 }
 
@@ -90,6 +90,7 @@ function setInstellingen(request, response) {
   var SQL = `INSERT INTO instellingen (run, stamp, wachttijdPoort)
              VALUES (? , CURRENT_TIMESTAMP, ?)`;
   db.prepare(SQL).run(huidigeRunID, wachttijd);
+  response.status(200).send();
 }
 
 
