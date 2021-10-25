@@ -2,8 +2,8 @@
 tasks:
   - name: Node
     init: yarn install
-    # Maak regel hieronder actief om de server automatisch te laten starten:
-    # command: node server-app.js 3000
+# Maak regel hieronder actief om de server automatisch te laten starten:
+# command: node server-app.js 3000
 
   - name: SQLite
     init: | # zorg ervoor dat een en ander mooier werkt in de CLI van sqlite
@@ -23,3 +23,4 @@ ports:
 vscode:
   extensions:
     - gruntfuggly.activitusbar
+    - mhutchie.git-graph
