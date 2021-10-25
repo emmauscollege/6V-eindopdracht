@@ -29,7 +29,15 @@ De server start en stop je met behulp van de debugger. Klik links op het icon me
 Het widget wordt door de server eenmalig als statisch bestand gestuurd naar een browser die erom vraag. De code van de widget wordt niet door GitPod uitgevoerd, maar door het browservenster waarin het widget zichtbaar is. Het testen / debuggen van het widget doe je met de optie 'Javascript-console' van je browser. In Chrome vind je die onder het menu 'Weergave->Ontwikkelaar->Javascript-console' en in Safari onder 'Ontwikkelaar-> Toon Javascript Console'. Je kunt daar ook breakpoints maken en de inhoud van variabelen inspecteren.
 
 ## Database
-Voor het uittesten van queries kun je in de terminal van GitPod verbinding maken met je database. Doe dit door het volgende commando in te tikken: `sqlite3 database/database.db`. 
+Voor het uittesten van queries kun je in de terminal van GitPod verbinding maken met je database. Doe dit door het volgende commando in te tikken: `sqlite3 database/database.db`.
+
+## Samenwerken
+Je planning doe je met behulp van issues en het scrumboard. Iedere maandag kijk je kort terug op de afgelopen week en maak je een planning voor de week die voor je ligt:
+- Laat iedereen kort vertellen hoever men gekomen is. Zo krijg je met elkaar een beeld van waar het project staat.
+- Werk de lijsten 'doing' en 'done' bij voor zover die niet _up to date_ is. M.a.w. verplaats afronden taken (of een feature) die niet in 'done' staat alsnog naar die lijst.
+- Scroll door de to-do lijst en werk deze bij. Zijn er nieuwe problemen of nieuwe ideeën die op de to-do lijst moeten komen? Misschien blijkt een taak toch te groot en moet je hier meerdere taken van maken. Werk de taken bij onder 'issues'.
+- Verdeel taken voor de nieuwe week. **Koppel een taak aan een persoon**.
+
 
 ## Handige links
 * [Tinkercad](https://tinkercad.io) - voor het maken van een virtuele Arduino
