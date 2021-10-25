@@ -19,14 +19,6 @@ function setup() {
 
   teller = new Teller(150, 50);
 
-  // maak een button en stel deze in
-  button = createButton('Verstuur');
-  button.position(250, 575);
-  button.mouseClicked(stuurNieuweInstellingen);
-
-  wachtijdInput = createInput();
-  wachtijdInput.position(225, 70);
-  wachtijdInput.size(50);
 
   // om de ... milliseconden wordt 'vraagSensorData' uitgevoerd
   setInterval(vraagSensorData, UPDATE_INTERVAL);
@@ -85,23 +77,5 @@ function vraagSensorData() {
 // stuurt een http-verzoek aan de server met de
 // nieuwe instellingen
 function stuurNieuweInstellingen() {
-  var request = new XMLHttpRequest();
-
-  // maak een http-verzoek
-  request.open('GET', '/api/set/instellingen?wachttijd=' + wachtijdInput.value(), true)
-
-  // wat uitvoeren als het antwoord teruggegeven wordt?
-  request.onload = function () {
-    if (request.status == 200) {
-      // geeft positieve feedback in widget ofzo
-      console.log("Server accepteerde instellingen.")
-    }
-    else {
-      console.log("server reageert niet zoals gehoopt.");
-      console.log(request.response);
-    }
-  }
-
-  // verstuur het request
-  request.send()
+  // moet nog worden gemaakt
 }

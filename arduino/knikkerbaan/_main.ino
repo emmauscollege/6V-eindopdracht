@@ -31,47 +31,9 @@ void loop() {
   // knikkerbaan is leeggelopen, er zijn geen sensors dit iets moeten meten
   // nu is het tijd om contact te leggen met de server:
   if (millis() > tijdVoorContactMetServer + LEEGLOOP_TIJD) {
-    // contact met server houdt in:
-    //   * nieuw totaal aantal knikkers versturen
-    //   * instellingen ophalen
+    Serial.print("Er zijn nu zoveel knikkers geteld: ");
+    Serial.println(tellerA.getAantal())
 
-    // maak de reeks variabelen voor achter de URL:
-    String data = "knikkers=";
-    data += 3; //tellerA.getTeller();
-
-    // als je meer waarden wilt toevoegen, ziet dat er zo uit:
-    //data += "&blabla";
-    //data += 5;
-
-    // stuur deze data naar het juiste adres
-    wifi.stuurVerzoek("/api/set/sensordata", data.c_str());
-
-    // vraag bij de server de nieuwe instellingen op:
-    String serverAntwoord = wifi.stuurVerzoek("/api/get/instellingen", "");
-    
-    // om een beeld te geven van het antwoord: print in seriële monitor:
-    Serial.println(serverAntwoord);
-
-    // om de instellingen gemakkelijk uit te kunnen lezen
-    JSONVar ontvangenInstellingen = JSON.parse(serverAntwoord);                      // deze regel hoef je niet te begrijpen
-
-    // check of de instellingen goed zijn binnengekomen
-    // indien ja: pas instellingen op Arduino aan
-    // indien nee: geef een foutmelding in de seriële monitor
-    if (JSON.typeof(ontvangenInstellingen) != "undefined") {                         // je hoeft deze voorwaarde niet te begrijpen
-      // stel de wachttijd (opnieuw) in:
-      serverContactInterval = ontvangenInstellingen["wachttijdPoort"];
-    }
-    else {
-      // evt. foutmelding:
-      Serial.println("FOUT: serverAntwoord kon niet worden verwerkt");
-    }
-
-    // servercommunicatie is afgerond
-    // bepaal nu op welke tijd de knikkerbaan
-    // opnieuw contact moet zoeken
-    unsigned long nu = millis();
-    tijdVoorContactMetServer = nu + (serverContactInterval * 1000);
 
     // en zet nu het poortje weer open:
     poortBoven.open();

@@ -76,21 +76,13 @@ function setSensorData(request, response) {
 
 // geeft de laatst ingevoerde instellingen terug
 function getInstellingen(request, response) {
-  // haal de laatst opgeslagen instellingen op
-  // db.get geeft alleen het eerste resultaat
-  var data = db.prepare("SELECT * FROM instellingen ORDER BY id DESC").get();
-  response.status(200).send(data);
+  // moet nog gemaakt worden
 }
 
 
 // slaat doorgegeven instellingen op in de database
 function setInstellingen(request, response) {
-  var huidigeRunID = geefHoogsteRunID();
-  var wachttijd = request.query.wachttijd;
-  var SQL = `INSERT INTO instellingen (run, stamp, wachttijdPoort)
-             VALUES (? , CURRENT_TIMESTAMP, ?)`;
-  db.prepare(SQL).run(huidigeRunID, wachttijd);
-  response.status(200).send();
+  // moet nog gemaakt worden
 }
 
 

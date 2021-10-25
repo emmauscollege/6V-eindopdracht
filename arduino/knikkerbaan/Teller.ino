@@ -13,7 +13,7 @@ class Teller {
       return (wasOnderbroken == false && isOnderbroken() == true);
     }
 
-    int teller = 0;
+    int aantal = 0;
 
   public:
     Teller(int _pin) {
@@ -26,19 +26,19 @@ class Teller {
       //Serial.println(digitalRead(pin));
       if (wordtOnderbroken()) {
         if (millis() - laatstOnderbroken > DEBOUNCE_TIME) {
-          verhoogTeller();
-          Serial.println(teller);
+          verhoogAantal();
+          //Serial.println(aantal);
         } 
       }
 
       wasOnderbroken = isOnderbroken();
     }
 
-    void verhoogTeller() {
-      teller++;
+    void verhoogAantal() {
+      aantal++;
     }
 
-    int getTeller() {
-      return teller;
+    int getAantal() {
+      return aantal;
     }
 };
