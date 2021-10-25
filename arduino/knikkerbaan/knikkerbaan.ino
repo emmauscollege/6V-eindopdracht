@@ -2,13 +2,12 @@
 
 //declareer hier je globale constanten:
 
-const int BOVEN_POORT_PIN = 7;
-const int BOVEN_POORT_WACHTTIJD = 500;
-const int LEEGLOOP_TIJD = 5000;
+const int BOVEN_POORT_PIN = 7;    // pin van servo die bovenste poort regelt
+const int LEEGLOOP_TIJD = 5000;   // tijd die knikkers nodig hebben om na het
+                                  // sluiten van de poort langs alle sensors te komen
 
-char WIFI_NETWERK[] = "informaticaOnly";
-char WIFI_WACHTWOORD[] = "donaldduck";
-char SERVER_DOMEIN[] = "3000-amethyst-sailfish-xpjm3x26.ws-eu18.gitpod.io";
-//char SERVER_PAD[] = "/api/update";
+char WIFI_NETWERK[] = "";
+char WIFI_WACHTWOORD[] = "";
+char SERVER_DOMEINNAAM[] = "";    // domeinnaam van gitpod-server, zoals 3000-lavendel-bla-bla.gitpod.io
 
-const int TELLER_A_PIN = 5;
+const int TELLER_A_PIN = 5;       // pin waarop IR-sensor voor Teller A is aangesloten
