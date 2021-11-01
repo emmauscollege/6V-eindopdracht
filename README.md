@@ -31,6 +31,10 @@ Het widget wordt door de server eenmalig als statisch bestand gestuurd naar een 
 ## Database
 Voor het uittesten van queries kun je in de terminal van GitPod verbinding maken met je database. Doe dit door het volgende commando in te tikken: `sqlite3 database/database.db`.
 
+## Hulp en uitleg
+- Kijk op [ons youTubekanaal](https://youtube.com/playlist?list=PLpTljPS--R5DrFFioALPeb-69mNS-4ueJ) voor uitlegfilmpjes
+- Gebruik de [hulplijn repo](https://github.com/emmaus-6v/Eindopdracht-hulplijn) voor naslag, codevoorbeelden en het vragenforum (onder 'discussion)
+
 ## Samenwerken
 Je planning doe je met behulp van issues en het scrumboard. Iedere maandag kijk je kort terug op de afgelopen week en maak je een planning voor de week die voor je ligt:
 - Laat iedereen kort vertellen hoever men gekomen is. Zo krijg je met elkaar een beeld van waar het project staat.
